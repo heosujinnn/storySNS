@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "75608687723",
+    "project_id": "storysns-575ae",
+    "storage_bucket": "storysns-575ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75608687723:android:c0003c8bd3c0c27b749d2e",
+        "android_client_info": {
+          "package_name": "com.soojin.storysns"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "75608687723-kdpfb2j6mnaf6fov2g5nv2nfib4siott.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLpD3eBFd1gbhsvrLENFp0-p0_J83BTMU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "75608687723-kdpfb2j6mnaf6fov2g5nv2nfib4siott.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
