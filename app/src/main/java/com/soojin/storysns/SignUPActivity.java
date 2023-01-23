@@ -1,5 +1,6 @@
 package com.soojin.storysns;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +27,8 @@ public class SignUPActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        findViewById(R.id.signUp_btn).setOnClickListener(onClickListener);
+        findViewById(R.id.login_btn).setOnClickListener(onClickListener);
     }
         @Override
         public void onStart() {
@@ -36,7 +39,6 @@ public class SignUPActivity extends AppCompatActivity {
 //                reload();
 //            }
 
-        findViewById(R.id.signUp_btn).setOnClickListener(onClickListener);
 
 }
 View.OnClickListener onClickListener=new View.OnClickListener(){
@@ -46,6 +48,11 @@ View.OnClickListener onClickListener=new View.OnClickListener(){
             case R.id.signUp_btn:
                 Log.e("클릭","클릭");
                 signUp();
+                break;
+            case R.id.login_btn:
+                Log.e("클릭","클릭");
+                Intent intent = new Intent(SignUPActivity.this,LoginActivity.class);
+                startActivity(intent);
                 break;
         }
     }
@@ -65,8 +72,8 @@ View.OnClickListener onClickListener=new View.OnClickListener(){
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
-                                    Toast.makeText(SignUPActivity.this, "회원가입에 성공하였습니다.", Toast.LENGTH_SHORT).show();
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    Toast.makeText(SignUPActivity.this, "회원가입에 성공하였습니다.", Toast.LENGTH_SHORT).show();
                                     //성공 ui
                                 } else {
                                     if (task.getException() != null) {
