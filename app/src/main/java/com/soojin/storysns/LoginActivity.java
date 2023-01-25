@@ -1,5 +1,6 @@
 package com.soojin.storysns;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,13 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         findViewById(R.id.login_btn).setOnClickListener(onClickListener);
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
+        findViewById(R.id.gotoPasswordReset_tv).setOnClickListener(onClickListener);
     }
     View.OnClickListener onClickListener=new View.OnClickListener(){
         @Override
@@ -41,12 +36,16 @@ public class LoginActivity extends AppCompatActivity {
             switch (view.getId()){
                 case R.id.login_btn:
                     Log.e("클릭","클릭");
-                    signUp();
+                    login();
+                    break;
+                case R.id.gotoPasswordReset_tv:
+                    Intent intent=new Intent(LoginActivity.this,PasswordResetActivity.class);
+                    startActivity(intent);
                     break;
             }
         }
     };
-    private void signUp() {
+    private void login() {
         String email = ((EditText) findViewById(R.id.email_et)).getText().toString();
         String password = ((EditText) findViewById(R.id.password_et)).getText().toString();
         if (email.length() > 0 && password.length() > 0 ) {
@@ -60,6 +59,11 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 Toast.makeText(LoginActivity.this, "로그인 성공하였습니다", Toast.LENGTH_SHORT).show();
+
+                                Intent intent =new Intent(LoginActivity.this,MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());

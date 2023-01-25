@@ -35,12 +35,17 @@ public class SignUPActivity extends AppCompatActivity {
             super.onStart();
             // Check if user is signed in (non-null) and update UI accordingly.
             FirebaseUser currentUser = mAuth.getCurrentUser();
-//            if (currentUser != null) {
-//                reload();
-//            }
+        }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        moveTaskToBack(true);
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(1);
+        //로그인-> 뒤로가기 했을 때 앱 종료 시키기
 
+    }
 
-}
 View.OnClickListener onClickListener=new View.OnClickListener(){
     @Override
     public void onClick(View view) {
@@ -92,5 +97,6 @@ View.OnClickListener onClickListener=new View.OnClickListener(){
             Toast.makeText(this, "이메일 또는 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
         }
     }
+
     
 }

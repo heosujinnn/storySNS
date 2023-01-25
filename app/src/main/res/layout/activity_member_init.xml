@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <TextView
-        android:text="로그인"
+        android:text="회원정보"
         android:textSize="30dp"
         android:textStyle="bold"
         android:textColor="#000000"
@@ -20,39 +20,44 @@
         android:layout_marginBottom="5dp"
         >
 
+    <EditText
+        android:id="@+id/name_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="이름"
+        android:inputType="text"
+        ></EditText>
         <EditText
-            android:id="@+id/email_et"
-            android:hint="이메일"
-            android:layout_marginBottom="10dp"
+            android:id="@+id/phoneNumber_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></EditText>
+            android:layout_height="wrap_content"
+            android:hint="전화번호"
+            android:inputType="phone"
+            ></EditText>
         <EditText
-            android:id="@+id/password_et"
-            android:hint="비밀번호"
-            
-            android:layout_marginBottom="10dp"
+            android:id="@+id/birthday_et"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></EditText>
+            android:layout_height="wrap_content"
+            android:hint="생일"
+            android:inputType="date"
+            ></EditText>
+        <EditText
+            android:id="@+id/address_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="주소"
+            android:inputType="textPostalAddress"
+            ></EditText>
 
         <Button
-            android:id="@+id/login_btn"
-            android:text="로그인"
+            android:id="@+id/memberCheck_btn"
+            android:text="확인"
             android:textColor="@color/black"
             android:background="#E3B5B5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
         </Button>
-
-        <TextView
-            android:id="@+id/gotoPasswordReset_tv"
-            android:layout_marginTop="15dp"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="비밀번호를 까먹으셨나요?">
-
-        </TextView>
 
     </LinearLayout>
 
