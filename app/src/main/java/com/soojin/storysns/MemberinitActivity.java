@@ -1,6 +1,8 @@
 package com.soojin.storysns;
 
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -8,6 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,6 +33,8 @@ public class MemberinitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_member_init);
 
        findViewById(R.id.memberCheck_btn).setOnClickListener(onClickListener);
+       findViewById(R.id.profile_iv).setOnClickListener(onClickListener);
+
     }
 
     @Override
@@ -37,12 +43,29 @@ public class MemberinitActivity extends AppCompatActivity {
         finish();
     }
 
+    private final ActivityResultLauncher<Intent> resultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData()!=null)  {
+//                   Bundle extras = result.getData().getExtras();
+//                   bitmap=(Bitmap)extras.get("some_key");
+                    Intent data = result.getData();
+                    String returnValue=data.getStringExtra("some_key");
+
+                }
+
+            });
+
     View.OnClickListener onClickListener=new View.OnClickListener(){
         @Override
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.memberCheck_btn:
                     profileUpdate();
+                    break;
+                case R.id.profile_iv:
+                    Intent intent= new Intent(MemberinitActivity.this, CameraActivity.class);
+                    startActivity(intent);
+
                     break;
 
             }

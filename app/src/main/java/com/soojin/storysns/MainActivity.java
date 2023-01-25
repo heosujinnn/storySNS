@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else { // if (user != null) null 이 아니면
             //회원가입 or 로그인 정보가 있는지 체크
-            Intent intent=new Intent(MainActivity.this,CameraActivity.class);
+            Intent intent=new Intent(MainActivity.this,MemberinitActivity.class);
             startActivity(intent);
 
             DocumentReference docRef = db.collection("users").document("user.getUid");
