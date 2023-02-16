@@ -16,7 +16,6 @@
 
 package com.soojin.storysns;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.Image;
 import android.media.ImageReader;
@@ -24,6 +23,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.soojin.storysns.fragment.Camera2BasicFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;

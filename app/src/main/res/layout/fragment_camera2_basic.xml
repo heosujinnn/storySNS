@@ -17,7 +17,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.soojin.storysns.AutoFitTextureView
+    <com.soojin.storysns.view.AutoFitTextureView
         android:id="@+id/texture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,13 +37,13 @@
             android:id="@+id/picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="picture"
+            android:text="촬영"
             android:layout_weight="1"
             />
 
       <Button
           android:id="@+id/change"
-          android:text="change"
+          android:text="변환"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_weight="1"
