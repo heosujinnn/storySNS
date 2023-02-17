@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //화면 회전 안되게 함.
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db=FirebaseFirestore.getInstance();
 
@@ -35,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else { // if (user != null) null 이 아니면
             //회원가입 or 로그인 정보가 있는지 체크
-            Intent intent=new Intent(MainActivity.this,MemberinitActivity.class);
-            startActivity(intent);
+//            Intent intent=new Intent(MainActivity.this,MemberinitActivity.class);
+//            startActivity(intent);
 
             DocumentReference docRef = db.collection("users").document("user.getUid");
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -73,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                     FirebaseAuth.getInstance().signOut(); //로그아웃
                     startSignUpActivity();
                     break;
-
             }
         }
     };

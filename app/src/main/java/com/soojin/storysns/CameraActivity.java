@@ -38,7 +38,7 @@ public class CameraActivity extends AppCompatActivity {
             = new ImageReader.OnImageAvailableListener() {
         @Override
         public void onImageAvailable(ImageReader reader) {
-           // mBackgroundHandler.post(new Camera2BasicFragment.ImageUpLoader(reader.acquireNextImage()));
+           //mBackgroundHandler.post(new Camera2BasicFragment.ImageUpLoader(reader.acquireNextImage()));
             Log.e("로그","캡쳐");
 
 
@@ -69,7 +69,6 @@ public class CameraActivity extends AppCompatActivity {
             Intent resultIntent=new Intent();
             resultIntent.putExtra("profilePath",mFile.toString());
             setResult(RESULT_OK, resultIntent);
-
             camera2BasicFragment.closeCamera(); //카메라 끄기
             finish();
         }

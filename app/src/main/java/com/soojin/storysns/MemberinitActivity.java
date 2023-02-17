@@ -1,6 +1,7 @@
 package com.soojin.storysns;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,11 +26,13 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,6 +45,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.soojin.storysns.adapter.GalleryAdapter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -85,9 +89,14 @@ public class MemberinitActivity extends AppCompatActivity {
                 if (result.getResultCode() == RESULT_OK) {
                     Intent data = result.getData();
                     profilePath = data.getStringExtra("profilePath");
-                    Log.e("로그", "profilePath" + profilePath); //카메라찍고 사진 저장되는 path
-                    Bitmap bmp = BitmapFactory.decodeFile(profilePath);
-                    profile_iv.setImageBitmap(bmp);
+//                    Log.e("로그", "profilePath" + profilePath); //카메라찍고 사진 저장되는 path
+//                    Bitmap bmp = BitmapFactory.decodeFile(profilePath);
+//                    profile_iv.setImageBitmap(bmp);
+                    Glide.with(this)
+                            .load(profilePath)
+                            .centerCrop()
+                            .override(500)
+                            .into(profile_iv);
                 }
             });
 
@@ -112,27 +121,29 @@ public class MemberinitActivity extends AppCompatActivity {
                     break;
                 case R.id.gallery: //갤러리 버튼
                     //권한 추가
-                    if (ContextCompat.checkSelfPermission(MemberinitActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        // 권한 있는 경우 실행할 코드
-                        Toast.makeText(MemberinitActivity.this, "이미 권한 설정이 되어있습니다.",Toast.LENGTH_SHORT).show();
-                    } else {
-                        // 권한 없는 경우, 권한 요청
+
+                    if (ContextCompat.checkSelfPermission(MemberinitActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                     //권한 없는 경우..
+
+                    }
+                    else {
+                        //Toast.makeText(MemberinitActivity.this,"권한을 허용해주세요.",Toast.LENGTH_SHORT).show();
                         requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE);
                     }
-                    Intent intent2=new Intent(MemberinitActivity.this,GalleryActivity.class);
-                    startActivity(intent2);
-                    break;
             }
         }
     };
 
+
     private ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted.toString().length()>0) {
-//                    Intent intent2=new Intent(MemberinitActivity.this,GalleryActivity.class);
-//                    startActivity(intent2);
+                if (isGranted) {
+                    Log.i("DEBUG", "권한 부여됨");
+                    Intent resultIntent = new Intent(MemberinitActivity.this, GalleryActivity.class);
+                    resultLauncher.launch(resultIntent);
+                }
+                else {
 
-                } else {
                     new AlertDialog.Builder(MemberinitActivity.this)
                             .setTitle("접근 권한")
                             .setMessage("사진을 첨부하시려면, 앱 접근 권한을 허용해 주세요.")
@@ -151,7 +162,27 @@ public class MemberinitActivity extends AppCompatActivity {
                                         .create().show();
                 }
             });
-
+//@Override
+//public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                                       int[] grantResults) {
+//    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    switch (requestCode) {
+//        case 1:
+//            // If request is cancelled, the result arrays are empty.
+//            if (grantResults.length > 0 &&
+//                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//
+////                Intent resultIntent = new Intent(MemberinitActivity.this, GalleryActivity.class);
+////                //resultLauncher.launch(resultIntent);
+////                startActivity(resultIntent);
+//
+//            } else {
+//               Toast.makeText(MemberinitActivity.this,"권한 허용해주세요",Toast.LENGTH_SHORT).show();
+//            }
+//            return;
+//    }
+//
+//}
 
 
         private void profileUpdate() {
@@ -238,6 +269,7 @@ public class MemberinitActivity extends AppCompatActivity {
                         }
                     });
         }
+
 
     }
 

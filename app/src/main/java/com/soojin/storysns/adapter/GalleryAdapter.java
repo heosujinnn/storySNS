@@ -44,22 +44,27 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     @Override
     public GalleryAdapter.GalleryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //갤러리 레이아웃만들어서
-       CardView cardView=(CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery,parent,false);
-       return new GalleryViewHolder(cardView);
-    }
+        CardView cardView=(CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gallery,parent,false);
+        final GalleryViewHolder galleryViewHolder=new GalleryViewHolder(cardView);
 
-    @Override
-    public void onBindViewHolder(@NonNull GalleryViewHolder holder,  int position) {
-        CardView cardView=holder.cardView;
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent resultIntent=new Intent();
-                resultIntent.putExtra("profilePath",mDataset.get(holder.getAdapterPosition()));
-               activity.setResult(Activity.RESULT_OK, resultIntent);
+                resultIntent.putExtra("profilePath",mDataset.get(galleryViewHolder.getAdapterPosition()));
+                activity.setResult(Activity.RESULT_OK, resultIntent);
                 activity.finish();
+                Log.e("testonBinding","testOnBinding");
+
             }
         });
+
+       return galleryViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull GalleryViewHolder holder, int position) {
+        CardView cardView=holder.cardView;
 
 
         ImageView imageView=cardView.findViewById(R.id.gallery_iv);
