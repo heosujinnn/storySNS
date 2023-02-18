@@ -18,6 +18,7 @@ import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firestore.v1.Write;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG="MainActivity";
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                     }
         findViewById(R.id.logout_btn).setOnClickListener(onClickListener);
+        findViewById(R.id.add_fab).setOnClickListener(onClickListener);
     }
     View.OnClickListener onClickListener=new View.OnClickListener() {
         @Override
@@ -76,12 +78,17 @@ public class MainActivity extends AppCompatActivity {
                     FirebaseAuth.getInstance().signOut(); //로그아웃
                     startSignUpActivity();
                     break;
+
+                case R.id.add_fab:
+                    Intent intent=new Intent(MainActivity.this, WritePostActivity.class);
+                    startActivity(intent);
+                    break;
             }
         }
     };
 
-
     private void startSignUpActivity(){
+
         Intent intent=new Intent(MainActivity.this,SignUPActivity.class);
         startActivity(intent);
     }

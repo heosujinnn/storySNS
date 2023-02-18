@@ -59,14 +59,10 @@ public class MemberinitActivity extends AppCompatActivity {
     private String profilePath;
     private FirebaseUser user;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_member_init);
-
 
         findViewById(R.id.memberCheck_btn).setOnClickListener(onClickListener);
         profile_iv = findViewById(R.id.profile_iv);
@@ -256,7 +252,6 @@ public class MemberinitActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "DocumentSnapshot successfully written!");
                             Toast.makeText(MemberinitActivity.this, "회원정보 등록을 성공하였습니다.", Toast.LENGTH_SHORT).show();
                             finish();
                         }
@@ -264,7 +259,6 @@ public class MemberinitActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error writing document", e);
                             Toast.makeText(MemberinitActivity.this, "회원정보 등록에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                         }
                     });

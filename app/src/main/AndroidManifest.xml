@@ -59,6 +59,9 @@
         </activity>
         <activity android:name=".GalleryActivity">
         </activity>
+        <activity android:name=".WritePostActivity">
+        </activity>
+
 
         <provider
             android:authorities="storySNS"
