@@ -1,15 +1,23 @@
 package com.soojin.storysns;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +37,36 @@ public class WritePostActivity extends AppCompatActivity {
 
         findViewById(R.id.add_btn).setOnClickListener(onClickListener);
         //게시물 올리는 버튼
+        findViewById(R.id.image_btn).setOnClickListener(onClickListener);
+        findViewById(R.id.video_btn).setOnClickListener(onClickListener);
     }
+
+    //이미지 경로 가져오기
+    private final ActivityResultLauncher<Intent> Launcher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    Intent data = result.getData();
+                    String profilePath = data.getStringExtra("profilePath");
+
+                    LinearLayout contentView_LL=findViewById(R.id.contentView_Linear);
+
+                    ViewGroup.LayoutParams layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    //1. 이미지 뷰 생성
+                    ImageView imageView=new ImageView(WritePostActivity.this);
+                    //2. 이미지 뷰 셋팅
+                    imageView.setLayoutParams(layoutParams);
+                    //Glide 사용해서 이미지 뷰 넣어주기
+                    Glide.with(this).load(profilePath).override(1000).into(imageView);
+                    contentView_LL.addView(imageView); //콘텐츠 레이아웃 안에 이미지뷰를 넣는다.
+
+                    EditText editText=new EditText(WritePostActivity.this);
+                    editText.setLayoutParams(layoutParams);
+                    editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
+                    contentView_LL.addView(editText);
+                }
+
+            });
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -38,6 +75,13 @@ public class WritePostActivity extends AppCompatActivity {
                 case R.id.add_btn:
                     contentUpload();
                     break;
+                case R.id.image_btn:
+                    startActivity(GalleryActivity.class,"image");
+                    break;
+                case R.id.video_btn:
+                    startActivity(GalleryActivity.class,"video");
+                    break;
+
             }
         }
     };
@@ -73,4 +117,15 @@ public class WritePostActivity extends AppCompatActivity {
                         }
                     });
         }
+
+
+
+    private void startActivity(Class c, String media){
+        Intent intent=new Intent(this,c);
+        intent.putExtra("media",media);
+        Launcher.launch(intent);
     }
+
+
+}
+
