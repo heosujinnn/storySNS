@@ -190,7 +190,6 @@ public class MemberinitActivity extends AppCompatActivity {
 
             if (name.length() > 0 && phoneNumber.length() > 9 && birthDay.length() > 5 && address.length() > 0) {
 
-
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 StorageReference storageRef = storage.getReference();
                 //사용자마다 사진 파일을 각 각 생성하게 (덮어쓰지 않게)
@@ -244,7 +243,6 @@ public class MemberinitActivity extends AppCompatActivity {
                 Toast.makeText(MemberinitActivity.this, "회원정보를 입력해주세요.", Toast.LENGTH_SHORT).show();
             }
         }
-
         private void uploader(MemberInfo memberInfo) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             //memberInfo = new MemberInfo(name, phoneNumber, birthDay, address, downloadUri.toString());
@@ -263,7 +261,5 @@ public class MemberinitActivity extends AppCompatActivity {
                         }
                     });
         }
-
-
     }
 

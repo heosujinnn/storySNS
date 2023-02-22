@@ -1,16 +1,19 @@
 package com.soojin.storysns;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 public class WriteInfo {
     private String title;
-    private String content;
+    private ArrayList<String> content;
     private String publisher;
+    private Date createdAt; //셍성일
 
-
-
-    public WriteInfo(String title, String content, String publisher) {
+    public WriteInfo(String title, ArrayList<String>  content, String publisher, Date createdAt) {
         this.title = title;
         this.content = content;
         this.publisher=publisher;
+        this.createdAt=createdAt;
     }
 
 
@@ -22,11 +25,11 @@ public class WriteInfo {
         this.title = title;
     }
 
-    public String getContent() {
+    public ArrayList<String>  getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(ArrayList<String>  content) {
         this.content = content;
     }
     public String getPublisher() {
@@ -37,5 +40,8 @@ public class WriteInfo {
         this.publisher = publisher;
     }
 
+    public Date getCreatedAt() {return createdAt;}
+
+    public void setCreatedAt(Date createdAt) {this.createdAt = createdAt;}
 
 }
