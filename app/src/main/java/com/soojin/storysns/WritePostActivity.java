@@ -10,12 +10,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
@@ -45,6 +47,8 @@ public class WritePostActivity extends AppCompatActivity {
     //이미지 경로
     private ArrayList<String> pathList=new ArrayList<>();
     private LinearLayout contentView_LL;
+    private RelativeLayout modifyORdelete; //사진 동영상 수정, 삭제 버튼
+    private ImageView selectedImageView; //여러 이미지들 중 선택 된 이미지
 
     //이미지 올리기위해 필요
     private int pathCount;
@@ -57,11 +61,16 @@ public class WritePostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_write_post);
 
         contentView_LL=findViewById(R.id.contentView_Linear);
+        modifyORdelete=findViewById(R.id.modifyORdelete);
 
         findViewById(R.id.add_btn).setOnClickListener(onClickListener);
         //게시물 올리는 버튼
         findViewById(R.id.image_btn).setOnClickListener(onClickListener);
         findViewById(R.id.video_btn).setOnClickListener(onClickListener);
+        findViewById(R.id. modifyORdelete).setOnClickListener(onClickListener);
+        findViewById(R.id.imageModify).setOnClickListener(onClickListener);
+        findViewById(R.id.videoModify).setOnClickListener(onClickListener);
+        findViewById(R.id.delete).setOnClickListener(onClickListener);
 
     }
 
@@ -75,20 +84,43 @@ public class WritePostActivity extends AppCompatActivity {
 
                     ViewGroup.LayoutParams layoutParams=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                    //삭제될 때 내용과 이미지 모두 삭제하기 위해 Linear을 만들어줍니다.
+                    LinearLayout linearLayout=new LinearLayout(WritePostActivity.this);
+                    linearLayout.setLayoutParams(layoutParams);
+                    linearLayout.setOrientation(LinearLayout.VERTICAL);
+                    contentView_LL.addView(linearLayout);
                     //1. 이미지 뷰 생성
                     ImageView imageView=new ImageView(WritePostActivity.this);
                     //2. 이미지 뷰 셋팅
                     imageView.setLayoutParams(layoutParams);
+                    imageView.setOnClickListener(new View.OnClickListener() { //이미지부 늘렀을 때
+                        @Override
+                        public void onClick(View v) {
+                            modifyORdelete.setVisibility(View.VISIBLE);  //카드뷰 보이게 (수정, 삭제 버튼)
+                            selectedImageView=(ImageView) v; //여러 이미지들 중 선택된 뷰를 저장함. 현재 이미지가 뭔지 알 수 있게끔
+                            }
+                    });
                     //Glide 사용해서 이미지 뷰 넣어주기
                     Glide.with(this).load(profilePath).override(1000).into(imageView);
-                    contentView_LL.addView(imageView); //콘텐츠 레이아웃 안에 이미지뷰를 넣는다.
+                    linearLayout.addView(imageView); //linear안에 이미지뷰를 넣는다.
 
                     EditText editText=new EditText(WritePostActivity.this);
                     editText.setLayoutParams(layoutParams);
                     editText.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
-                    contentView_LL.addView(editText);
+                    editText.setHint("내용");
+                    linearLayout.addView(editText); //et도 linear안에 넣는다.
+
                 }
             });
+    private final ActivityResultLauncher<Intent> Launcher2 =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                        if (result.getResultCode() == RESULT_OK) {
+                            Intent data = result.getData();
+                            String profilePath = data.getStringExtra("profilePath");
+                            Glide.with(this).load(profilePath).override(1000).into(selectedImageView);
+                        }
+                    });
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -98,14 +130,28 @@ public class WritePostActivity extends AppCompatActivity {
                     contentUpload();
                     break;
                 case R.id.image_btn:
-                    startActivity(GalleryActivity.class,"image");
+                    startActivity(GalleryActivity.class, "image");
                     break;
                 case R.id.video_btn:
-                    startActivity(GalleryActivity.class,"video");
+                    startActivity(GalleryActivity.class, "video");
                     break;
-
+                case R.id.modifyORdelete:
+                    if (modifyORdelete.getVisibility() == View.VISIBLE) {
+                        modifyORdelete.setVisibility(View.GONE); //카드뷰가 보이면 안보이게
+                    }
+                    break;
+                case R.id.imageModify:
+                    modifyActivity(GalleryActivity.class,"image");
+                    break;
+                case R.id.videoModify:
+                    modifyActivity(GalleryActivity.class,"video");
+                    break;
+                case R.id.delete:
+                    contentView_LL.removeView((View)selectedImageView.getParent()); //내용뷰를 지울거다. 내가 선택한 뷰의 내용과 이미지를..
+                    break;
             }
         }
+
     };
     //add_btn (올리기) 누르면 파이어베이스한테 보내지는 코드
     private void contentUpload() {
@@ -118,6 +164,10 @@ public class WritePostActivity extends AppCompatActivity {
 
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
+            FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+            final DocumentReference documentReference = firebaseFirestore.collection("cities").document();
+            //자동 생성 ID를 사용하여 문서 참조를 만든 후 참조를 사용하는 방법이 유용할 수 있습니다. 다음과 같이 doc()을 호출하면 됩니다. 리스너에서 사용:final
+
 
             //스토리지 진행 -> url 받아와서 내용이랑 같이 쏘기
             for(int i=0; i<contentView_LL.getChildCount(); i++) { //자식들 만큼 반복시킴
@@ -130,7 +180,7 @@ public class WritePostActivity extends AppCompatActivity {
                         //이미지 뷰일때 라면?
                         contentList.add(pathList.get(pathCount));
 
-                        final StorageReference mountainImagesRef = storageRef.child("users/" + user.getUid() + "/" + pathCount + ".jpg"); //0,1,2,3,4..순으로
+                        final StorageReference mountainImagesRef = storageRef.child("posts/" + documentReference.getId() + "/" + pathCount + ".jpg"); //0,1,2,3,4..순으로
 
                         try {
                             InputStream stream = new FileInputStream(new File(pathList.get(pathCount)));
@@ -160,7 +210,7 @@ public class WritePostActivity extends AppCompatActivity {
                                                 //사진이 여러장 일 때를 위해
                                                 // 성공 완료
                                                 WriteInfo writeInfo = new WriteInfo(title_et, contentList,user.getUid(),new Date());
-                                                storeUpload(writeInfo);
+                                                storeUpload(documentReference,writeInfo);
                                                 Log.e("test","올리기 test");
                                             }
                                         }
@@ -181,29 +231,31 @@ public class WritePostActivity extends AppCompatActivity {
 
         }
     }
-        private void storeUpload (WriteInfo writeInfo){
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("posts").add(writeInfo)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        //document : 자동으로 id가 생성돼서 차곡차곡 잘 들어간다.
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Toast.makeText(WritePostActivity.this, "업로드에 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(WritePostActivity.this, "업로드에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+        private void storeUpload (DocumentReference documentReference,WriteInfo writeInfo){
+            documentReference.set(writeInfo)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
         }
 
     private void startActivity(Class c, String media){
         Intent intent=new Intent(this,c);
         intent.putExtra("media",media);
         Launcher.launch(intent);
+    }
+    private void modifyActivity(Class c, String media){
+        Intent intent=new Intent(this,c);
+        intent.putExtra("media",media);
+        Launcher2.launch(intent);
     }
 }
 
